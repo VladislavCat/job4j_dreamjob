@@ -10,10 +10,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Controller
 public class PostController {
-
+    AtomicInteger atomicInteger = new AtomicInteger();
     private final PostStore store = PostStore.instOf();
 
     @GetMapping("/posts")
@@ -24,7 +25,7 @@ public class PostController {
 
     @GetMapping("/formAddPost")
     public String addPost(Model model) {
-        model.addAttribute("post", new Post(0, "Заполните поле", "Desc", new Date()));
+        model.addAttribute("post", new Post(atomicInteger.getAndIncrement(), "Заполните поле", "Desc", new Date()));
         return "addPost";
     }
 
