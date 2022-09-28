@@ -19,7 +19,7 @@ public class PostStore {
     }
 
     public void add(Post post) {
-        posts.put(post.getId(), post);
+        posts.putIfAbsent(post.getId(), post);
     }
 
     public static PostStore instOf() {

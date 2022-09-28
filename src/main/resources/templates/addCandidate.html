@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -25,17 +25,16 @@
                 Новый кандидат.
             </div>
             <div class="card-body">
-                <form>
-                    <div class="form-group">
-                        <label>Имя
-                            <input type="text" class="form-control">
-                        </label>
-                        <label>Резюме
-                            <input type="text" class="form-control">
-                        </label>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Сохранить</button>
-                </form>
+                    <form th:action="@{/createCandidate}" method="POST">
+                        <input type="hidden" name="id" value="0"/>
+                        <div class="form-group">
+                            <label for="name">Имя соискателя</label>
+                            <input type="text" class="form-control" name="name" id="name">
+                            <label for="desc">Текст резюме</label>
+                            <input type="text" class="form-control" name="desc" id="desc">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    </form>
             </div>
         </div>
     </div>

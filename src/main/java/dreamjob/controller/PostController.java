@@ -14,7 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Controller
 public class PostController {
-    private final AtomicInteger atomicInteger = new AtomicInteger();
+    private final AtomicInteger atomicInteger = new AtomicInteger(0);
     private final PostStore store = PostStore.instOf();
 
     @GetMapping("/posts")

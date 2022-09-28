@@ -26,4 +26,16 @@ public class CandidateStore {
     public Collection<Candidate> findAll() {
         return candidates.values();
     }
+
+    public void add(Candidate candidate) {
+        candidates.putIfAbsent(candidate.getId(), candidate);
+    }
+
+    public Candidate findById(int id) {
+        return candidates.get(id);
+    }
+
+    public void update(Candidate candidate) {
+        candidates.replace(candidate.getId(), candidate);
+    }
 }
