@@ -13,7 +13,12 @@ import java.util.Date;
 
 @Controller
 public class PostController {
-    private final PostService service = PostService.instOf();
+    private final PostService service;
+
+    public PostController(PostService postService) {
+        this.service = postService;
+
+    }
 
     @GetMapping("/posts")
     public String posts(Model model) {

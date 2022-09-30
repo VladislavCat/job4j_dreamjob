@@ -1,13 +1,14 @@
 package dreamjob.store;
 
 import dreamjob.model.Post;
+import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-
+@Repository
 public class PostStore {
     private static final PostStore INST = new PostStore();
     private final AtomicInteger atomicInteger = new AtomicInteger(0);
@@ -22,10 +23,6 @@ public class PostStore {
     public void add(Post post) {
         post.setId(atomicInteger.get());
         posts.putIfAbsent(atomicInteger.getAndIncrement(), post);
-    }
-
-    public static PostStore instOf() {
-        return INST;
     }
 
     public Collection<Post> findAll() {
