@@ -7,16 +7,20 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class CandidateStore {
     private static final CandidateStore INST = new CandidateStore();
-
+    AtomicInteger atomicInteger = new AtomicInteger(0);
     private final Map<Integer, Candidate> candidates = new ConcurrentHashMap<>();
 
     public CandidateStore() {
-        candidates.put(1, new Candidate(1, "Java Senior Dev", "Spring, Java Core, SQL, Kubernetes", new Date()));
-        candidates.put(2, new Candidate(2, "Java Fullstack Java Job", "Spring, Java Core, SQL, Database, Kubernetes", new Date()));
-        candidates.put(3, new Candidate(3, "Java Junior Job", "Java Core, SQL", new Date()));
+        candidates.put(1, new Candidate(atomicInteger.getAndIncrement(),
+                "Java Senior Dev", "Spring, Java Core, SQL, Kubernetes", new Date()));
+        candidates.put(2, new Candidate(atomicInteger.getAndIncrement(), "Java Fullstack Java Job",
+                "Spring, Java Core, SQL, Database, Kubernetes", new Date()));
+        candidates.put(3, new Candidate(atomicInteger.getAndIncrement(), "Java Junior Job",
+                "Java Core, SQL", new Date()));
     }
 
     public static CandidateStore instOf() {
@@ -28,7 +32,8 @@ public class CandidateStore {
     }
 
     public void add(Candidate candidate) {
-        candidates.putIfAbsent(candidate.getId(), candidate);
+        candidate.setId(atomicInteger.get());
+        candidates.putIfAbsent(atomicInteger.getAndIncrement(), candidate);
     }
 
     public Candidate findById(int id) {

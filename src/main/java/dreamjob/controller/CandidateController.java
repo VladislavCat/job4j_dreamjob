@@ -15,7 +15,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Controller
 public class CandidateController {
     private final CandidateStore store = CandidateStore.instOf();
-    private final AtomicInteger atomicInteger = new AtomicInteger(0);
 
     @GetMapping("/candidates")
     public String posts(Model model) {
@@ -25,7 +24,7 @@ public class CandidateController {
 
     @GetMapping("/formAddCandidate")
     public String addCandidate(Model model) {
-        model.addAttribute("candidate", new Candidate(atomicInteger.getAndIncrement(), "Заполните поле", "Desc", new Date()));
+        model.addAttribute("candidate", new Candidate(0, "Заполните поле", "Desc", new Date()));
         return "addCandidate";
     }
 
