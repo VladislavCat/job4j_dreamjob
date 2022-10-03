@@ -1,6 +1,7 @@
 package dreamjob.controller;
 
 import dreamjob.model.Post;
+import dreamjob.service.CityService;
 import dreamjob.service.PostService;
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Controller;
@@ -15,10 +16,11 @@ import java.util.Date;
 @Controller
 public class PostController {
     private final PostService service;
+    private final CityService cityService;
 
-    public PostController(PostService postService) {
+    public PostController(PostService postService, CityService cityService) {
         this.service = postService;
-
+        this.cityService = cityService;
     }
 
     @GetMapping("/posts")
@@ -29,6 +31,7 @@ public class PostController {
 
     @GetMapping("/formAddPost")
     public String addPost(Model model) {
+        model.addAttribute("cities", cityService.getAllCities());
         model.addAttribute("post", new Post(0, "Заполните поле", "Desc", new Date(), true));
         return "addPost";
     }

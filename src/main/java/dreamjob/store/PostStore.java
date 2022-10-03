@@ -1,5 +1,6 @@
 package dreamjob.store;
 
+import dreamjob.model.City;
 import dreamjob.model.Post;
 import org.springframework.stereotype.Repository;
 
@@ -15,9 +16,12 @@ public class PostStore {
     private final Map<Integer, Post> posts = new ConcurrentHashMap<>();
 
     private PostStore() {
-        posts.put(1, new Post(atomicInteger.getAndIncrement(), "Junior Java Job", "Desc1", new Date(), true));
-        posts.put(2, new Post(atomicInteger.getAndIncrement(), "Middle Java Job", "Desc2", new Date(), true));
-        posts.put(3, new Post(atomicInteger.getAndIncrement(), "Senior Java Job", "Desc3", new Date(), false));
+        posts.put(1, new Post(atomicInteger.getAndIncrement(), "Junior Java Job",
+                "Desc1", new Date(), true, new City(0, "Москва")));
+        posts.put(2, new Post(atomicInteger.getAndIncrement(), "Middle Java Job",
+                "Desc2", new Date(), true, new City(0, "Москва")));
+        posts.put(3, new Post(atomicInteger.getAndIncrement(), "Senior Java Job",
+                "Desc3", new Date(), false, new City(0, "Москва")));
     }
 
     public void add(Post post) {
