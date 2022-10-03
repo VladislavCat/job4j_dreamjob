@@ -7,13 +7,25 @@ public class Candidate {
     private int id;
     private String name;
     private String desc;
-    private Date created;
+    private String created;
+    private byte[] photo;
 
-    public Candidate(int id, String name, String desc, Date created) {
+    public Candidate() {
+
+    }
+
+    public Candidate(int id, String name, String desc) {
+        this.id = id;
+        this.name = name;
+        this.desc = desc;
+    }
+
+    public Candidate(int id, String name, String desc, String created, byte[] photo) {
         this.id = id;
         this.name = name;
         this.desc = desc;
         this.created = created;
+        this.photo = photo;
     }
 
     public int getId() {
@@ -40,13 +52,22 @@ public class Candidate {
         this.desc = desc;
     }
 
-    public Date getCreated() {
+    public String getCreated() {
         return created;
     }
 
-    public void setCreated(Date created) {
+    public void setCreated(String created) {
         this.created = created;
     }
+
+    public byte[] getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -57,13 +78,11 @@ public class Candidate {
             return false;
         }
         Candidate candidate = (Candidate) o;
-        return id == candidate.id && Objects.equals(name, candidate.name)
-                && Objects.equals(desc, candidate.desc)
-                && Objects.equals(created, candidate.created);
+        return id == candidate.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, desc, created);
+        return Objects.hash(id);
     }
 }
