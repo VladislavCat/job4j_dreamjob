@@ -2,9 +2,10 @@ package dreamjob.service;
 
 import dreamjob.model.Candidate;
 import dreamjob.store.CandidateStore;
+import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-
+@Service
 public class CandidateService {
     private final CandidateStore store;
 

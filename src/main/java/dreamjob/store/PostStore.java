@@ -15,9 +15,9 @@ public class PostStore {
     private final Map<Integer, Post> posts = new ConcurrentHashMap<>();
 
     private PostStore() {
-        posts.put(1, new Post(atomicInteger.getAndIncrement(), "Junior Java Job", "Desc1", new Date()));
-        posts.put(2, new Post(atomicInteger.getAndIncrement(), "Middle Java Job", "Desc2", new Date()));
-        posts.put(3, new Post(atomicInteger.getAndIncrement(), "Senior Java Job", "Desc3", new Date()));
+        posts.put(1, new Post(atomicInteger.getAndIncrement(), "Junior Java Job", "Desc1", new Date(), true));
+        posts.put(2, new Post(atomicInteger.getAndIncrement(), "Middle Java Job", "Desc2", new Date(), true));
+        posts.put(3, new Post(atomicInteger.getAndIncrement(), "Senior Java Job", "Desc3", new Date(), false));
     }
 
     public void add(Post post) {

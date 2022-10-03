@@ -2,13 +2,14 @@ package dreamjob.store;
 
 import dreamjob.model.Candidate;
 import dreamjob.model.Post;
+import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-
+@Repository
 public class CandidateStore {
     private static final CandidateStore INST = new CandidateStore();
     private final AtomicInteger atomicInteger = new AtomicInteger(0);
