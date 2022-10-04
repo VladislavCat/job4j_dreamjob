@@ -1,17 +1,17 @@
 package dreamjob.controller;
 
+import dreamjob.model.City;
 import dreamjob.model.Post;
 import dreamjob.service.CityService;
 import dreamjob.service.PostService;
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.List;
+
 @ThreadSafe
 @Controller
 public class PostController {
@@ -32,12 +32,14 @@ public class PostController {
     @GetMapping("/formAddPost")
     public String addPost(Model model) {
         model.addAttribute("cities", cityService.getAllCities());
-        model.addAttribute("post", new Post(0, "Заполните поле", "Desc", new Date(), true));
+        model.addAttribute("post", new Post(0, "Заполните поле",
+                "Desc", new Date().toString(), true));
         return "addPost";
     }
 
     @PostMapping("/createPost")
     public String createPost(@ModelAttribute Post post) {
+        post.setCity(cityService.findById(post.getCity().getId()));
         service.add(post);
         return "redirect:/posts";
     }

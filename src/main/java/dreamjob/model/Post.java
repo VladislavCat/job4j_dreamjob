@@ -1,6 +1,7 @@
 package dreamjob.model;
 
 import java.io.Serializable;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Objects;
 
@@ -8,13 +9,13 @@ public class Post implements Serializable {
     private int id;
     private String name;
     private String description;
-    private Date created;
+    private String created;
     private boolean visible;
     private City city;
 
     public Post() { }
 
-    public Post(int id, String name, String description, Date created, boolean visible) {
+    public Post(int id, String name, String description, String created, boolean visible) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -22,7 +23,7 @@ public class Post implements Serializable {
         this.visible = visible;
     }
 
-    public Post(int id, String name, String description, Date created, boolean visible, City city) {
+    public Post(int id, String name, String description, String created, boolean visible, City city) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -55,11 +56,11 @@ public class Post implements Serializable {
         this.description = description;
     }
 
-    public Date getCreated() {
+    public String getCreated() {
         return created;
     }
 
-    public void setCreated(Date created) {
+    public void setCreated(String created) {
         this.created = created;
     }
 
