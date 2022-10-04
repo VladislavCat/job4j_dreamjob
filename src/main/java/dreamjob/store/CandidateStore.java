@@ -4,9 +4,7 @@ import dreamjob.model.Candidate;
 import org.springframework.stereotype.Repository;
 
 import java.io.*;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 @Repository
@@ -25,7 +23,7 @@ public class CandidateStore {
                 "Java Core, SQL", new Date().toString(), arr));
     }
 
-    public synchronized byte[] initStore() {
+    public static byte[] initStore() {
         byte[] rsl = {};
         try (FileInputStream fis = new FileInputStream("stock_picture.png")) {
             rsl = fis.readAllBytes();
@@ -42,7 +40,7 @@ public class CandidateStore {
     public void add(Candidate candidate) {
         candidate.setId(atomicInteger.get());
         candidate.setCreated(new Date().toString());
-        candidate.setPhoto(candidate.getPhoto() == null ? arr : candidate.getPhoto());
+        candidate.setPhoto(candidate.getPhoto().length == 0 ? arr : candidate.getPhoto());
         candidates.putIfAbsent(atomicInteger.getAndIncrement(), candidate);
     }
 

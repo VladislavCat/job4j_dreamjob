@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Date;
+
 @ThreadSafe
 @Controller
 public class CandidateController {
@@ -51,7 +51,9 @@ public class CandidateController {
     }
 
     @PostMapping("/updateCandidate")
-    public String updateCandidate(@ModelAttribute Candidate candidate) {
+    public String updateCandidate(@ModelAttribute Candidate candidate,
+                                  @RequestParam("file") MultipartFile file) throws IOException {
+        candidate.setPhoto(file != null ? file.getBytes() : new byte[]{});
         service.update(candidate);
         return "redirect:/candidates";
     }
