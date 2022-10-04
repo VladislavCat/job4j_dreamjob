@@ -49,6 +49,8 @@ public class CandidateStore {
     }
 
     public void update(Candidate candidate) {
+        candidate.setCreated(findById(candidate.getId()).getCreated());
+        candidate.setPhoto(candidate.getPhoto().length == 0 ? arr : candidate.getPhoto());
         candidates.replace(candidate.getId(), candidate);
     }
 }
