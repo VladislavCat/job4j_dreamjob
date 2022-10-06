@@ -12,9 +12,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import java.util.List;
+
+import static dreamjob.Main.LOGGER;
+
 @Repository
 public class PostDBStore {
     private final BasicDataSource pool;
+    private final String findAll = "SELECT * FROM posts";
+    private final String add = "INSERT INTO posts(name, description, created, visible, city_id)"
+            + " VALUES (?, ?, ?, ?, ?)";
+    private final String update = "UPDATE posts SET name = ?, description = ?, "
+            + "created = ?, visible = ?, city_id = ? WHERE id = ?";
+    private final String findById = "SELECT * FROM posts WHERE id = ?";
 
     public PostDBStore(BasicDataSource pool) {
         this.pool = pool;
@@ -23,17 +32,17 @@ public class PostDBStore {
     public List<Post> findAll() {
         List<Post> posts = new ArrayList<>();
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM posts")
+             PreparedStatement ps =  cn.prepareStatement(findAll)
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    posts.add(new Post(it.getInt("id"), it.getString("name"), it.getString("description"),
+                    posts.add(new Post(it.getInt("id"), it.getString("ame"), it.getString("description"),
                             it.getDate("created").toString(), it.getBoolean("visible"),
                             new City(it.getInt("city_id"), "")));
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.toString());
         }
         return posts;
     }
@@ -41,9 +50,7 @@ public class PostDBStore {
 
     public Post add(Post post) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("INSERT INTO posts(name, description, created, visible, city_id)"
-                             + " VALUES (?, ?, ?, ?, ?)",
-                     PreparedStatement.RETURN_GENERATED_KEYS)
+             PreparedStatement ps =  cn.prepareStatement(add, PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
             ps.setString(1, post.getName());
             ps.setString(2, post.getDescription());
@@ -57,15 +64,14 @@ public class PostDBStore {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.toString());
         }
         return post;
     }
 
     public void update(Post post) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement("UPDATE posts SET name = ?, description = ?, "
-                     + "created = ?, visible = ?, city_id = ? WHERE id = ?")) {
+             PreparedStatement ps = cn.prepareStatement(update)) {
             ps.setString(1, post.getName());
             ps.setString(2, post.getDescription());
             DateFormat date = new SimpleDateFormat("E, MMM dd yyyy HH:mm:ss");
@@ -73,13 +79,13 @@ public class PostDBStore {
             ps.setBoolean(4, post.isVisible());
             ps.setInt(5, post.getCity().getId());
         } catch (SQLException | ParseException e) {
-            e.printStackTrace();
+            LOGGER.error(e.toString());
         }
     }
 
     public Post findById(int id) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM posts WHERE id = ?")
+             PreparedStatement ps =  cn.prepareStatement(findById)
         ) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
@@ -90,7 +96,7 @@ public class PostDBStore {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error(e.toString());
         }
         return null;
     }

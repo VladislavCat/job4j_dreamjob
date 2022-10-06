@@ -1,6 +1,8 @@
 package dreamjob;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -10,8 +12,11 @@ import java.io.InputStreamReader;
 import java.util.Objects;
 import java.util.Properties;
 
+
 @SpringBootApplication
 public class Main {
+    public static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+
     private Properties loadDbProperties() {
         Properties cfg = new Properties();
         try (BufferedReader io = new BufferedReader(
