@@ -1,15 +1,15 @@
 package dreamjob.service;
 
 import dreamjob.model.Candidate;
-import dreamjob.store.CandidateStore;
+import dreamjob.store.CandidateDBStore;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 @Service
 public class CandidateService {
-    private final CandidateStore store;
+    private final CandidateDBStore store;
 
-    public CandidateService(CandidateStore store) {
+    public CandidateService(CandidateDBStore store) {
         this.store = store;
     }
 

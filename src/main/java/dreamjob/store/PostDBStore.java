@@ -36,7 +36,7 @@ public class PostDBStore {
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    posts.add(new Post(it.getInt("id"), it.getString("ame"), it.getString("description"),
+                    posts.add(new Post(it.getInt("id"), it.getString("name"), it.getString("description"),
                             it.getDate("created").toString(), it.getBoolean("visible"),
                             new City(it.getInt("city_id"), "")));
                 }

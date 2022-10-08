@@ -9,18 +9,18 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 @Repository
 public class CandidateStore {
-    private final byte[] arr = initStore();
+    public static final byte[] STOCK_PICTURE = initStore();
     private final AtomicInteger atomicInteger = new AtomicInteger(1);
     private final Map<Integer, Candidate> candidates = new ConcurrentHashMap<>();
 
     public CandidateStore() {
         add(new Candidate(atomicInteger.get(),
                 "Java Senior Dev", "Spring, Java Core, SQL, Kubernetes",
-                new Date().toString(), arr));
+                new Date().toString(), STOCK_PICTURE));
         add(new Candidate(atomicInteger.get(), "Java Fullstack Java Job",
-                "Spring, Java Core, SQL, Database, Kubernetes", new Date().toString(), arr));
+                "Spring, Java Core, SQL, Database, Kubernetes", new Date().toString(), STOCK_PICTURE));
         add(new Candidate(atomicInteger.get(), "Java Junior Job",
-                "Java Core, SQL", new Date().toString(), arr));
+                "Java Core, SQL", new Date().toString(), STOCK_PICTURE));
     }
 
     public static byte[] initStore() {
@@ -40,7 +40,7 @@ public class CandidateStore {
     public void add(Candidate candidate) {
         candidate.setId(atomicInteger.get());
         candidate.setCreated(new Date().toString());
-        candidate.setPhoto(candidate.getPhoto().length == 0 ? arr : candidate.getPhoto());
+        candidate.setPhoto(candidate.getPhoto().length == 0 ? STOCK_PICTURE : candidate.getPhoto());
         candidates.putIfAbsent(atomicInteger.getAndIncrement(), candidate);
     }
 
@@ -50,7 +50,7 @@ public class CandidateStore {
 
     public void update(Candidate candidate) {
         candidate.setCreated(findById(candidate.getId()).getCreated());
-        candidate.setPhoto(candidate.getPhoto().length == 0 ? arr : candidate.getPhoto());
+        candidate.setPhoto(candidate.getPhoto().length == 0 ? STOCK_PICTURE : candidate.getPhoto());
         candidates.replace(candidate.getId(), candidate);
     }
 }
