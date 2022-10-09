@@ -1,4 +1,4 @@
-create table post (
+create table POSTS (
     id serial primary key,
     name text,
     description text,

@@ -3,9 +3,12 @@ package dreamjob.store;
 import dreamjob.model.Candidate;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.stereotype.Repository;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.sql.*;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,14 +48,18 @@ public class CandidateDBStore {
 
 
     public Candidate add(Candidate candidate) {
+        validateImageCandidate(candidate);
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement(add, PreparedStatement.RETURN_GENERATED_KEYS)
+             PreparedStatement ps =  cn.prepareStatement(add, PreparedStatement.RETURN_GENERATED_KEYS);
+             FileOutputStream fos = new FileOutputStream("candidate_photo.png");
+             FileInputStream fis = new FileInputStream("candidate_photo.png")
         ) {
+            fos.write(candidate.getPhoto());
             ps.setString(1, candidate.getName());
             ps.setString(2, candidate.getDesc());
             ps.setDate(3, new Date(new java.util.Date().getTime()));
-            byte[] tmpArr = candidate.getPhoto().length == 0 ? STOCK_PICTURE : candidate.getPhoto();
-            ps.setArray(4, getArraySql(tmpArr, cn));
+            File file = new File("candidate_photo.png");
+            ps.setBinaryStream(4, fis, file.length());
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {
@@ -66,22 +73,28 @@ public class CandidateDBStore {
     }
 
     public void update(Candidate candidate) {
+        validateImageCandidate(candidate);
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement(update)) {
+             PreparedStatement ps = cn.prepareStatement(update);
+             FileOutputStream fos = new FileOutputStream("candidate_photo.png");
+             FileInputStream fis = new FileInputStream("candidate_photo.png")) {
+            fos.write(candidate.getPhoto());
             ps.setString(1, candidate.getName());
             ps.setString(2, candidate.getDesc());
-            DateFormat date = new SimpleDateFormat("E, MMM dd yyyy HH:mm:ss");
+            DateFormat date = new SimpleDateFormat("yyyy-MM-dd");
             ps.setDate(3, new Date(date.parse(findById(candidate.getId()).getCreated()).getTime()));
-            byte[] tmpArr = candidate.getPhoto().length == 0 ? STOCK_PICTURE : candidate.getPhoto();
-            ps.setArray(4, getArraySql(tmpArr, cn));
-        } catch (SQLException | ParseException e) {
+            File file = new File("candidate_photo.png");
+            ps.setBinaryStream(4, fis, file.length());
+            ps.setInt(5, candidate.getId());
+            ps.execute();
+        } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
     }
 
     public Candidate findById(int id) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement(findById)
+             PreparedStatement ps = cn.prepareStatement(findById)
         ) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
@@ -95,17 +108,24 @@ public class CandidateDBStore {
         return null;
     }
 
-    private Array getArraySql(byte[] tmpArr, Connection cn) throws SQLException {
-        Byte[] arrayInt = new Byte[tmpArr.length];
-        for (int i = 0; i < tmpArr.length; i++) {
-            arrayInt[i] = tmpArr[i];
-        }
-        return cn.createArrayOf("Integer", arrayInt);
-    }
-
     private Candidate createCandidate(ResultSet it) throws SQLException {
         return new Candidate(it.getInt("id"), it.getString("name"),
                 it.getString("description"), it.getDate("created").toString(),
-                (it.getBytes("photo") == null ? STOCK_PICTURE : it.getBytes("photo")));
+                it.getBytes("photo"));
+    }
+
+    private Array getArraySql(byte[] tmpArr, Connection cn) throws SQLException {
+        tmpArr = org.apache.commons.codec.binary.Base64.encodeBase64(tmpArr);
+        String[] arrayInt = new String[tmpArr.length];
+        for (int i = 0; i < tmpArr.length; i++) {
+            arrayInt[i] = Integer.toHexString(tmpArr[i]);
+        }
+        return cn.createArrayOf("bytea", arrayInt);
+    }
+
+    private void validateImageCandidate(Candidate candidate) {
+        if (candidate.getPhoto().length == 0) {
+            candidate.setPhoto(STOCK_PICTURE);
+        }
     }
 }

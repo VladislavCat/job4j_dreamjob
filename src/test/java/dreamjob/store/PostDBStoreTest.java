@@ -15,7 +15,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PostDBStoreTest {
-
     @BeforeAll
     static void clearBase() {
         PostDBStore store = new PostDBStore(new Main().loadPool());
