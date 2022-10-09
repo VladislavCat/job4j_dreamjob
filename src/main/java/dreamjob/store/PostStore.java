@@ -1,7 +1,10 @@
 package dreamjob.store;
 
+import dreamjob.Main;
 import dreamjob.model.City;
 import dreamjob.model.Post;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import java.util.Collection;
 import java.util.Date;
@@ -11,6 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 public class PostStore {
+    public static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
     private final AtomicInteger atomicInteger = new AtomicInteger(1);
     private final Map<Integer, Post> posts = new ConcurrentHashMap<>();
 

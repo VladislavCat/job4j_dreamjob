@@ -15,7 +15,6 @@ import java.util.Properties;
 
 @SpringBootApplication
 public class Main {
-    public static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
     private Properties loadDbProperties() {
         Properties cfg = new Properties();

@@ -13,7 +13,8 @@ import java.util.ArrayList;
 
 import java.util.List;
 
-import static dreamjob.Main.LOGGER;
+import static dreamjob.store.PostStore.LOGGER;
+
 
 @Repository
 public class PostDBStore {
@@ -36,13 +37,14 @@ public class PostDBStore {
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    posts.add(new Post(it.getInt("id"), it.getString("name"), it.getString("description"),
+                    posts.add(new Post(it.getInt("id"), it.getString("name"),
+                            it.getString("description"),
                             it.getDate("created").toString(), it.getBoolean("visible"),
                             new City(it.getInt("city_id"), "")));
                 }
             }
         } catch (Exception e) {
-            LOGGER.error(e.toString());
+            LOGGER.error(e.getMessage(), e);
         }
         return posts;
     }
@@ -64,7 +66,7 @@ public class PostDBStore {
                 }
             }
         } catch (Exception e) {
-            LOGGER.error(e.toString());
+            LOGGER.error(e.getMessage(), e);
         }
         return post;
     }
@@ -74,12 +76,14 @@ public class PostDBStore {
              PreparedStatement ps = cn.prepareStatement(update)) {
             ps.setString(1, post.getName());
             ps.setString(2, post.getDescription());
-            DateFormat date = new SimpleDateFormat("E, MMM dd yyyy HH:mm:ss");
-            ps.setDate(3, new Date(date.parse(findById(post.getId()).getCreated()).getTime()));
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            ps.setDate(3, new Date(formatter.parse(findById(post.getId()).getCreated()).getTime()));
             ps.setBoolean(4, post.isVisible());
             ps.setInt(5, post.getCity().getId());
+            ps.setInt(6, post.getId());
+            ps.execute();
         } catch (SQLException | ParseException e) {
-            LOGGER.error(e.toString());
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -96,9 +100,13 @@ public class PostDBStore {
                 }
             }
         } catch (Exception e) {
-            LOGGER.error(e.toString());
+            LOGGER.error(e.getMessage(), e);
         }
         return null;
+    }
+
+    public BasicDataSource getPool() {
+        return pool;
     }
 }
 
