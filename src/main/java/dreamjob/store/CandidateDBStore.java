@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dreamjob.Main.LOGGER;
+import static dreamjob.store.PostStore.LOGGER;
 import static dreamjob.store.CandidateStore.STOCK_PICTURE;
 
 @Repository
@@ -34,13 +34,11 @@ public class CandidateDBStore {
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    posts.add(new Candidate(it.getInt("id"), it.getString("name"),
-                            it.getString("description"), it.getDate("created").toString(),
-                            (it.getBytes("photo") == null ? STOCK_PICTURE : it.getBytes("photo"))));
+                    posts.add(createCandidate(it));
                 }
             }
         } catch (Exception e) {
-            LOGGER.error(e.toString());
+            LOGGER.error(e.getMessage(), e);
         }
         return posts;
     }
@@ -62,7 +60,7 @@ public class CandidateDBStore {
                 }
             }
         } catch (Exception e) {
-            LOGGER.error(e.toString());
+            LOGGER.error(e.getMessage(), e);
         }
         return candidate;
     }
@@ -77,7 +75,7 @@ public class CandidateDBStore {
             byte[] tmpArr = candidate.getPhoto().length == 0 ? STOCK_PICTURE : candidate.getPhoto();
             ps.setArray(4, getArraySql(tmpArr, cn));
         } catch (SQLException | ParseException e) {
-            LOGGER.error(e.toString());
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -88,13 +86,11 @@ public class CandidateDBStore {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
-                    return new Candidate(it.getInt("id"), it.getString("name"),
-                            it.getString("description"), it.getDate("created").toString(),
-                            (it.getBytes("photo") == null ? STOCK_PICTURE : it.getBytes("photo")));
+                    return createCandidate(it);
                 }
             }
         } catch (Exception e) {
-            LOGGER.error(e.toString());
+            LOGGER.error(e.getMessage(), e);
         }
         return null;
     }
@@ -105,5 +101,11 @@ public class CandidateDBStore {
             arrayInt[i] = tmpArr[i];
         }
         return cn.createArrayOf("Integer", arrayInt);
+    }
+
+    private Candidate createCandidate(ResultSet it) throws SQLException {
+        return new Candidate(it.getInt("id"), it.getString("name"),
+                it.getString("description"), it.getDate("created").toString(),
+                (it.getBytes("photo") == null ? STOCK_PICTURE : it.getBytes("photo")));
     }
 }

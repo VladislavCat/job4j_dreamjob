@@ -3,5 +3,5 @@ create table candidates (
     name text,
     description text,
     created date,
-    photo integer[]
+    photo bytea
 );
