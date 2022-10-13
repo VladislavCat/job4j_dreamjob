@@ -14,7 +14,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 public class PostStore {
-    public static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
     private final AtomicInteger atomicInteger = new AtomicInteger(1);
     private final Map<Integer, Post> posts = new ConcurrentHashMap<>();
 

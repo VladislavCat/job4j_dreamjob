@@ -1,7 +1,10 @@
 package dreamjob.store;
 
+import dreamjob.Main;
 import dreamjob.model.Candidate;
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
@@ -13,7 +16,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dreamjob.store.PostStore.LOGGER;
 import static dreamjob.store.CandidateStore.STOCK_PICTURE;
 
 @Repository
@@ -25,6 +27,7 @@ public class CandidateDBStore {
     private final String update = "UPDATE candidates SET name = ?, description = ?, "
             + "created = ?, photo = ? WHERE id = ?";
     private final String findById = "SELECT * FROM candidates WHERE id = ?";
+    private final Logger logger = LoggerFactory.getLogger(Main.class);
 
     public CandidateDBStore(BasicDataSource pool) {
         this.pool = pool;
@@ -41,7 +44,7 @@ public class CandidateDBStore {
                 }
             }
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
         }
         return posts;
     }
@@ -67,7 +70,7 @@ public class CandidateDBStore {
                 }
             }
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
         }
         return candidate;
     }
@@ -88,7 +91,7 @@ public class CandidateDBStore {
             ps.setInt(5, candidate.getId());
             ps.execute();
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -103,7 +106,7 @@ public class CandidateDBStore {
                 }
             }
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
         }
         return null;
     }

@@ -1,8 +1,11 @@
 package dreamjob.store;
 
+import dreamjob.Main;
 import dreamjob.model.City;
 import dreamjob.model.Post;
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -13,7 +16,6 @@ import java.util.ArrayList;
 
 import java.util.List;
 
-import static dreamjob.store.PostStore.LOGGER;
 
 
 @Repository
@@ -25,7 +27,7 @@ public class PostDBStore {
     private final String update = "UPDATE posts SET name = ?, description = ?, "
             + "created = ?, visible = ?, city_id = ? WHERE id = ?";
     private final String findById = "SELECT * FROM posts WHERE id = ?";
-
+    private final Logger logger = LoggerFactory.getLogger(Main.class);
     public PostDBStore(BasicDataSource pool) {
         this.pool = pool;
     }
@@ -44,7 +46,7 @@ public class PostDBStore {
                 }
             }
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
         }
         return posts;
     }
@@ -66,7 +68,7 @@ public class PostDBStore {
                 }
             }
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
         }
         return post;
     }
@@ -83,7 +85,7 @@ public class PostDBStore {
             ps.setInt(6, post.getId());
             ps.execute();
         } catch (SQLException | ParseException e) {
-            LOGGER.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -100,7 +102,7 @@ public class PostDBStore {
                 }
             }
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+            logger.error(e.getMessage(), e);
         }
         return null;
     }
