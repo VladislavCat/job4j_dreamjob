@@ -27,7 +27,8 @@ public class PostDBStore {
     private final String update = "UPDATE posts SET name = ?, description = ?, "
             + "created = ?, visible = ?, city_id = ? WHERE id = ?";
     private final String findById = "SELECT * FROM posts WHERE id = ?";
-    private final Logger logger = LoggerFactory.getLogger(Main.class);
+    private final Logger logger = LoggerFactory.getLogger(PostDBStore.class);
+
     public PostDBStore(BasicDataSource pool) {
         this.pool = pool;
     }

@@ -27,7 +27,7 @@ public class CandidateDBStore {
     private final String update = "UPDATE candidates SET name = ?, description = ?, "
             + "created = ?, photo = ? WHERE id = ?";
     private final String findById = "SELECT * FROM candidates WHERE id = ?";
-    private final Logger logger = LoggerFactory.getLogger(Main.class);
+    private final Logger logger = LoggerFactory.getLogger(CandidateDBStore.class);
 
     public CandidateDBStore(BasicDataSource pool) {
         this.pool = pool;
