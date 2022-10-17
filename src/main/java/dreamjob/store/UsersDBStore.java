@@ -1,6 +1,5 @@
 package dreamjob.store;
 
-import dreamjob.Main;
 import dreamjob.model.User;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
@@ -11,18 +10,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
 @Repository
 public class UsersDBStore {
     private final BasicDataSource pool;
-    private final Logger logger = LoggerFactory.getLogger(Main.class);
+    private final Logger logger = LoggerFactory.getLogger(UsersDBStore.class);
     private final String add = "INSERT INTO users(email, password) VALUES(?, ?)";
 
     public UsersDBStore(BasicDataSource pool) {
         this.pool = pool;
     }
 
-    public User add(User user) {
+    public Optional<User> add(User user) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(add, PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
@@ -37,7 +37,7 @@ public class UsersDBStore {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return user;
+        return Optional.of(user);
     }
 
 
