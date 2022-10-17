@@ -17,7 +17,7 @@ public class UsersDBStore {
     private final BasicDataSource pool;
     private final Logger logger = LoggerFactory.getLogger(UsersDBStore.class);
     private final String add = "INSERT INTO users(email, password) VALUES(?, ?)";
-
+    private final String findByEmailAndPassword = "select * from users where email = ? and password = ?";
     public UsersDBStore(BasicDataSource pool) {
         this.pool = pool;
     }
@@ -43,12 +43,12 @@ public class UsersDBStore {
     public Optional<User> findUserByEmailAndPwd(String mail, String password) {
         User rsl = null;
         try (Connection cn = pool.getConnection();
-            PreparedStatement ps = cn.prepareStatement("select * from users where email = ? and password = ?")) {
+            PreparedStatement ps = cn.prepareStatement(findByEmailAndPassword)) {
                 ps.setString(1, mail);
                 ps.setString(2, password);
                 try (ResultSet rs = ps.executeQuery();) {
                     if (rs.next()) {
-                        rsl = new User(rs.getString(1), rs.getString(2));
+                        rsl = new User(rs.getString(1), rs.getString(2), rs.getString(3));
                     }
                 }
         } catch (SQLException e) {
