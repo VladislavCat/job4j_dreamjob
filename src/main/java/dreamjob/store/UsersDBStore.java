@@ -35,9 +35,26 @@ public class UsersDBStore {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return Optional.of(user);
+    }
+
+    public Optional<User> findUserByEmailAndPwd(String mail, String password) {
+        User rsl = null;
+        try (Connection cn = pool.getConnection();
+            PreparedStatement ps = cn.prepareStatement("select * from users where email = ? and password = ?")) {
+                ps.setString(1, mail);
+                ps.setString(2, password);
+                try (ResultSet rs = ps.executeQuery();) {
+                    if (rs.next()) {
+                        rsl = new User(rs.getString(1), rs.getString(2));
+                    }
+                }
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);
+        }
+        return rsl == null ? Optional.empty() : Optional.of(rsl);
     }
 
 
