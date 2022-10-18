@@ -16,7 +16,7 @@ import java.util.Optional;
 public class UsersDBStore {
     private final BasicDataSource pool;
     private final Logger logger = LoggerFactory.getLogger(UsersDBStore.class);
-    private final String add = "INSERT INTO users(email, password) VALUES(?, ?)";
+    private final String add = "INSERT INTO users(email, password, name) VALUES(?, ?, ?)";
     private final String findByEmailAndPassword = "select * from users where email = ? and password = ?";
     public UsersDBStore(BasicDataSource pool) {
         this.pool = pool;
@@ -29,6 +29,7 @@ public class UsersDBStore {
         ) {
             ps.setString(1, user.getEmail());
             ps.setString(2, user.getPassword());
+            ps.setString(3, user.getName());
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {
@@ -50,8 +51,8 @@ public class UsersDBStore {
                 ps.setString(2, password);
                 try (ResultSet rs = ps.executeQuery();) {
                     if (rs.next()) {
-                        rsl = Optional.of(new User(rs.getString(1), rs.getString(2),
-                                rs.getString(3)));
+                        rsl = Optional.of(new User(rs.getString("email"), rs.getString("password"),
+                                rs.getString("name")));
                     }
                 }
         } catch (SQLException e) {

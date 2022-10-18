@@ -14,6 +14,7 @@ public class User {
     public User(String email, String password, String name) {
         this.email = email;
         this.password = password;
+        this.name = name;
     }
 
     public String getName() {
@@ -63,5 +64,13 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(email, password);
+    }
+
+    @Override
+    public String toString() {
+        return "User{"
+                + "id=" + id
+                + ", email='" + email + '\'' + ", password='" + password + '\''
+                + ", name='" + name + '\'' + '}';
     }
 }

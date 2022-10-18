@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @ThreadSafe
@@ -25,7 +26,8 @@ public class CandidateController {
     }
 
     @GetMapping("/candidates")
-    public String posts(Model model) {
+    public String posts(Model model, HttpSession session) {
+        UserName.userSessionSetName(model, session);
         model.addAttribute("candidates", service.findAll());
         return "candidates";
     }
