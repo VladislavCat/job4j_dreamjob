@@ -42,21 +42,22 @@ public class UsersDBStore {
         return rsl;
     }
 
-    public Optional<User> findUserByEmailAndPwd(String mail, String password) {
-        User rsl = null;
+    public Optional<User> findUserByEmailAndPassword(String mail, String password) {
+        Optional<User> rsl = Optional.empty();
         try (Connection cn = pool.getConnection();
             PreparedStatement ps = cn.prepareStatement(findByEmailAndPassword)) {
                 ps.setString(1, mail);
                 ps.setString(2, password);
                 try (ResultSet rs = ps.executeQuery();) {
                     if (rs.next()) {
-                        rsl = new User(rs.getString(1), rs.getString(2), rs.getString(3));
+                        rsl = Optional.of(new User(rs.getString(1), rs.getString(2),
+                                rs.getString(3)));
                     }
                 }
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
         }
-        return rsl == null ? Optional.empty() : Optional.of(rsl);
+        return rsl;
     }
 
 
