@@ -23,6 +23,7 @@ public class UsersDBStore {
     }
 
     public Optional<User> add(User user) {
+        Optional<User> rsl = Optional.empty();
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(add, PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
@@ -32,12 +33,13 @@ public class UsersDBStore {
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {
                     user.setId(id.getInt(1));
+                    rsl = Optional.of(user);
                 }
             }
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);
         }
-        return Optional.of(user);
+        return rsl;
     }
 
     public Optional<User> findUserByEmailAndPwd(String mail, String password) {
