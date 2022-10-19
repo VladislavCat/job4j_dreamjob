@@ -2,6 +2,7 @@ package dreamjob.controller;
 
 import dreamjob.model.Candidate;
 import dreamjob.service.CandidateService;
+import dreamjob.util.UserName;
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;

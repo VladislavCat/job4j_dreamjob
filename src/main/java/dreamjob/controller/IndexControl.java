@@ -1,6 +1,6 @@
 package dreamjob.controller;
 
-import dreamjob.model.User;
+import dreamjob.util.UserName;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

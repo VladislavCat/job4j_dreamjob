@@ -1,11 +1,11 @@
-package dreamjob.controller;
+package dreamjob.util;
 
 import dreamjob.model.User;
 import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpSession;
 
-public class UserName {
+public final class UserName {
 
     private UserName() {
     }
